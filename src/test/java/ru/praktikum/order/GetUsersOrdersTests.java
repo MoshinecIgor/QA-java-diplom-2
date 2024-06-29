@@ -18,7 +18,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@DisplayName("Тесты связанные с заказами")
+@DisplayName("Тесты создания заказов")
 public class GetUsersOrdersTests {
     private String accessToken;
 

@@ -24,8 +24,7 @@ public class OrderSteps {
                 .statusCode(200)
                 .body("success", equalTo(true))
                 .log().all();
-        List<String> ingredientIds = response.jsonPath().getList("data._id");
-        return ingredientIds;
+        return response.jsonPath().getList("data._id");
     }
     @Step("Создание заказа без авторизации")
     public static void createOrderWithoutAuthorization(List<String> ingredients) {
@@ -101,19 +100,5 @@ public class OrderSteps {
                 .log().all()
                 .body("success", equalTo(true));
         return response.jsonPath().getString("accessToken").substring(7); // Убираем "Bearer " из токена
-    }
-
-    @Step("Получение заказов пользователя")
-    public static void getUserOrders(String accessToken) {
-        Response response = RestAssured.given()
-                .header("Authorization", "Bearer " + accessToken)
-                .log().all()
-                .get(EndPoints.GET_ORDERS);
-
-        response.then()
-                .statusCode(200)
-                .log().all()
-                .body("success", equalTo(true))
-                .body("orders", notNullValue());
     }
 }

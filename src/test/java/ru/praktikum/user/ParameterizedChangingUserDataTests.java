@@ -25,7 +25,6 @@ import static org.hamcrest.Matchers.equalTo;
 @RunWith(Parameterized.class)
 public class ParameterizedChangingUserDataTests {
     private String accessToken;
-    private User user;
     private final User updatedUser;
     private final boolean isAuthorized;
     private final int expectedStatusCode;
@@ -40,8 +39,8 @@ public class ParameterizedChangingUserDataTests {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        UserSteps userSteps = new UserSteps();
-        User baseUser = userSteps.generateUniqueUser();
+        User baseUser;
+        baseUser = UserSteps.generateUniqueUser();
         return Arrays.asList(new Object[][]{
                 {new User(baseUser.getEmail(), baseUser.getPassword(), "UpdatedName"), true, 200, ""},
                 {new User("updated.email@example.com", baseUser.getPassword(), baseUser.getName()), true, 200, ""},
@@ -59,7 +58,7 @@ public class ParameterizedChangingUserDataTests {
 
     @Before
     public void createUserAndLogin() {
-        user = UserSteps.generateUniqueUser();
+        User user = UserSteps.generateUniqueUser();
         UserSteps.createUser(user);
         accessToken = loginUserAndGetToken(user);
     }

@@ -15,9 +15,9 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class UserSteps {
     public static User generateUniqueUser() {
-        String uniqueEmail = "user" + UUID.randomUUID().toString() + "@example.com";
+        String uniqueEmail = "user" + UUID.randomUUID() + "@example.com";
         String password = "password123";
-        String name = "User" + UUID.randomUUID().toString();
+        String name = "User" + UUID.randomUUID();
         return new User(uniqueEmail, password, name);
     }
 
