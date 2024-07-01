@@ -35,19 +35,8 @@ public class ChangingUserDataTests {
     @After
     public void deleteUser() {
         if (accessToken != null) {
-            deleteUserWithAccessToken(accessToken);
+            UserSteps.deleteUserWithAccessToken(accessToken);
         }
-    }
-    @Step("Удаление пользователя с токеном доступа")
-    private void deleteUserWithAccessToken(String accessToken) {
-        RestAssured.given()
-                .header("Authorization", "Bearer " + accessToken)
-                .log().all()
-                .delete(EndPoints.DELETE_USER)
-                .then()
-                .statusCode(202)
-                .log().all()
-                .body("success", equalTo(true));
     }
     @Step("Логин пользователя и получение токена")
     private String loginUserAndGetToken(User user) {

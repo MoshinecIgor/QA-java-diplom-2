@@ -49,4 +49,15 @@ public class UserSteps {
                 .body("success", equalTo(true));
         return response.jsonPath().getString("accessToken").substring(7); // Убираем "Bearer " из токена
     }
+    @Step("Удаление пользователя с токеном доступа")
+    public static void deleteUserWithAccessToken(String accessToken) {
+        RestAssured.given()
+                .header("Authorization", "Bearer " + accessToken)
+                .log().all()
+                .delete(EndPoints.DELETE_USER)
+                .then()
+                .statusCode(202)
+                .log().all()
+                .body("success", equalTo(true));
+    }
 }
