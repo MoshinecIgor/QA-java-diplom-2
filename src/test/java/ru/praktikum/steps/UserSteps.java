@@ -6,7 +6,6 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import ru.praktikum.EndPoints;
 import ru.praktikum.model.User;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.UUID;
@@ -31,6 +30,7 @@ public class UserSteps {
 
     public static void createUser(User user) {
         RestAssured.given()
+
                 .contentType(ContentType.JSON)
                 .body(user)
                 .post(EndPoints.CREATE_USER)
