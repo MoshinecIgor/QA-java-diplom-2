@@ -61,16 +61,4 @@ public class GetUsersOrdersTests {
                 .body("success", equalTo(true))
                 .body("orders", notNullValue());
     }
-    @Step("Получение заказов неавторизованным пользователем")
-    public static void getUserOrdersUnauthorized() {
-        Response response = RestAssured.given()
-                .log().all()
-                .get(EndPoints.GET_ORDERS);
-
-        response.then()
-                .statusCode(401)
-                .log().all()
-                .body("success", equalTo(false))
-                .body("message", equalTo("You should be authorised"));
-    }
 }
