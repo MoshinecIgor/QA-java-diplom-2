@@ -2,7 +2,9 @@ package ru.praktikum.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.Getter;
 
+@Getter
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
@@ -14,18 +16,6 @@ public class User {
         this.email = email;
         this.password = password;
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
