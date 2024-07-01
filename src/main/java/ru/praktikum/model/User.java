@@ -3,12 +3,14 @@ package ru.praktikum.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     private String email;
+    @Setter
     private String name;
     private String password;
 
@@ -18,7 +20,4 @@ public class User {
         this.name = name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }
