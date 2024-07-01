@@ -26,6 +26,7 @@ public class OrderSteps {
                 .log().all();
         return response.jsonPath().getList("data._id");
     }
+
     @Step("Создание заказа без авторизации")
     public static void createOrderWithoutAuthorization(List<String> ingredients) {
         Response response = RestAssured.given()

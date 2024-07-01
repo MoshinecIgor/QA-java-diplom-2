@@ -16,59 +16,61 @@ import static org.hamcrest.Matchers.equalTo;
 
 @DisplayName("Тесты создания пользователей")
 public class CreateUserTests {
-        private String accessToken;
+    private String accessToken;
 
-        @BeforeClass
-        public static void setup() {
-            RestAssured.baseURI = EndPoints.BASE_URL;
-        }
-        @After
-        public void deleteUser() {
-            if (accessToken != null) {
-                RestAssured.given()
-                        .header("Authorization", "Bearer " + accessToken)
-                        .log().all()
-                        .delete(EndPoints.DELETE_USER)
-                        .then()
-                        .statusCode(202)
-                        .log().all()
-                        .body("success", equalTo(true));
-            }
-        }
-        @Test
-        @DisplayName("Создание уникального пользователя")
-        @Description("В данном тесте мы создаем уникального пользователя")
-        public void createUniqueUserTest() {
-            User uniqueUser = UserSteps.generateUniqueUser();
+    @BeforeClass
+    public static void setup() {
+        RestAssured.baseURI = EndPoints.BASE_URL;
+    }
 
-            Response response = RestAssured.given()
-                    .contentType(ContentType.JSON)
-                    .body(uniqueUser)
-                    .post(EndPoints.CREATE_USER);
-            response.then()
-                    .statusCode(200)
-                    .body("success", equalTo(true))
-                    .body("user.email", equalTo(uniqueUser.getEmail()))
-                    .body("user.name", equalTo(uniqueUser.getName()));
-            accessToken = response.jsonPath().getString("accessToken").substring(7);
-
+    @After
+    public void deleteUser() {
+        if (accessToken != null) {
+            RestAssured.given()
+                    .header("Authorization", "Bearer " + accessToken)
+                    .log().all()
+                    .delete(EndPoints.DELETE_USER)
+                    .then()
+                    .statusCode(202)
+                    .log().all()
+                    .body("success", equalTo(true));
         }
+    }
 
-        @Test
-        @DisplayName("Создание уже зарегистрированного пользователя")
-        @Description("В данном тесте идет проверка того что будет ошибка при попытке создать пользователя с уже существующей почтой")
-        public void createExistingUserTest() {
-            User existingUser = UserSteps.generateUniqueUser();
-            // Создание пользователя впервые
-            UserSteps.createUser(existingUser);
-            // Попытка создать того же пользователя
-            Response response = RestAssured.given()
-                    .contentType(ContentType.JSON)
-                    .body(existingUser)
-                    .post(EndPoints.CREATE_USER);
-            response.then()
-                    .statusCode(403)
-                    .body("success", equalTo(false))
-                    .body("message", equalTo("User already exists"));
-        }
+    @Test
+    @DisplayName("Создание уникального пользователя")
+    @Description("В данном тесте мы создаем уникального пользователя")
+    public void createUniqueUserTest() {
+        User uniqueUser = UserSteps.generateUniqueUser();
+
+        Response response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(uniqueUser)
+                .post(EndPoints.CREATE_USER);
+        response.then()
+                .statusCode(200)
+                .body("success", equalTo(true))
+                .body("user.email", equalTo(uniqueUser.getEmail()))
+                .body("user.name", equalTo(uniqueUser.getName()));
+        accessToken = response.jsonPath().getString("accessToken").substring(7);
+
+    }
+
+    @Test
+    @DisplayName("Создание уже зарегистрированного пользователя")
+    @Description("В данном тесте идет проверка того что будет ошибка при попытке создать пользователя с уже существующей почтой")
+    public void createExistingUserTest() {
+        User existingUser = UserSteps.generateUniqueUser();
+        // Создание пользователя впервые
+        UserSteps.createUser(existingUser);
+        // Попытка создать того же пользователя
+        Response response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(existingUser)
+                .post(EndPoints.CREATE_USER);
+        response.then()
+                .statusCode(403)
+                .body("success", equalTo(false))
+                .body("message", equalTo("User already exists"));
+    }
 }

@@ -23,6 +23,7 @@ public class LoginTests {
     public static void setup() {
         RestAssured.baseURI = EndPoints.BASE_URL;
     }
+
     @After
     public void deleteUser() {
         if (accessToken != null) {
@@ -36,6 +37,7 @@ public class LoginTests {
                     .body("success", equalTo(true));
         }
     }
+
     @Test
     @DisplayName("Логин под существующим пользователем")
     @Description("Тест об успешном логине под существующим пользователем")
@@ -66,6 +68,7 @@ public class LoginTests {
         User invalidUser = new User("invalid@example.com", "wrongpassword", "InvalidUser");
         loginUserWithInvalidCredentials(invalidUser);
     }
+
     @Step("Логин с неверным логином и паролем")
     private void loginUserWithInvalidCredentials(User user) {
         Response response = RestAssured.given()

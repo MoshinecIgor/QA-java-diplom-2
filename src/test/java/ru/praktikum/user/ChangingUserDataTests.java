@@ -26,18 +26,21 @@ public class ChangingUserDataTests {
     public static void setup() {
         RestAssured.baseURI = EndPoints.BASE_URL;
     }
+
     @Before
     public void createUserAndLogin() {
         user = UserSteps.generateUniqueUser();
         UserSteps.createUser(user);
         accessToken = loginUserAndGetToken(user);
     }
+
     @After
     public void deleteUser() {
         if (accessToken != null) {
             UserSteps.deleteUserWithAccessToken(accessToken);
         }
     }
+
     @Step("Логин пользователя и получение токена")
     private String loginUserAndGetToken(User user) {
         Response response = RestAssured.given()
@@ -50,6 +53,7 @@ public class ChangingUserDataTests {
                 .body("success", equalTo(true));
         return response.jsonPath().getString("accessToken").substring(7); // Убираем "Bearer " из токена
     }
+
     @Test
     @Description("Изменение данных пользователя с авторизацией")
     @DisplayName("Изменение данных пользователя с авторизацией")
@@ -72,6 +76,7 @@ public class ChangingUserDataTests {
                 .body("success", equalTo(true))
                 .body("user.name", equalTo(updatedUser.getName()));
     }
+
     @Test
     @Description("Изменение данных пользователя без авторизации")
     @DisplayName("Изменение данных пользователя без авторизации")
