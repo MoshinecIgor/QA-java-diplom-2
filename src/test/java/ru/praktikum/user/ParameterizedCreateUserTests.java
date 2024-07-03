@@ -44,21 +44,6 @@ public class ParameterizedCreateUserTests {
     @DisplayName("Создание пользователя с отсутствующим обязательным полем")
     @Description("Параметризированый тест о попытке создания пользователя с отсутствием какого-то из обязательныъ полей")
     public void createUserWithMissingFieldTest() {
-        createAndValidateUserWithMissingField(user, expectedMessage);
-    }
-
-    @Step("Создание пользователя с отсутствующим обязательным полем")
-    private void createAndValidateUserWithMissingField(User user, String expectedMessage) {
-        Response response = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(user)
-                .log().all() // Логирование запроса
-                .post(EndPoints.CREATE_USER);
-
-        response.then()
-                .statusCode(403)
-                .log().all() // Логирование ответа
-                .body("success", equalTo(false))
-                .body("message", equalTo(expectedMessage));
+        UserSteps.createAndValidateUserWithMissingField(user, expectedMessage);
     }
 }

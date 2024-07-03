@@ -1,7 +1,6 @@
 package ru.praktikum.order;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -15,8 +14,7 @@ import ru.praktikum.steps.UserSteps;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 @DisplayName("Тесты создания заказов")
 public class GetUsersOrdersTests {
@@ -30,7 +28,7 @@ public class GetUsersOrdersTests {
     @After
     public void deleteUser() {
         if (accessToken != null) {
-            OrderSteps.deleteUserWithAccessToken(accessToken);
+            UserSteps.deleteUserWithAccessToken(accessToken);
         }
     }
 
@@ -41,24 +39,20 @@ public class GetUsersOrdersTests {
         User user = UserSteps.generateUniqueUser();
         UserSteps.createUser(user);
         accessToken = UserSteps.loginUserAndGetToken(user);
-        // Создание заказа
         List<String> ingredients = OrderSteps.getRandomIngredients(2);
         OrderSteps.createOrderWithAuthorization(ingredients, accessToken);
-        // Получение заказов пользователя
-        getUserOrders(accessToken);
+        OrderSteps.getUserOrders(accessToken);
     }
 
-    @Step("Получение заказов пользователя")
-    public void getUserOrders(String accessToken) {
-        Response response = RestAssured.given()
-                .header("Authorization", "Bearer " + accessToken)
-                .log().all()
-                .get(EndPoints.GET_ORDERS);
-
+    @Test
+    @Description("Получение заказов неавторизованным пользователем")
+    @DisplayName("Получение заказов неавторизованным пользователем")
+    public void getUserOrdersWithoutAuthorizationTest() {
+        Response response = OrderSteps.getUserOrdersWithoutAuthorization();
         response.then()
-                .statusCode(200)
+                .statusCode(401)
                 .log().all()
-                .body("success", equalTo(true))
-                .body("orders", notNullValue());
+                .body("success", equalTo(false))
+                .body("message", equalTo("You should be authorised"));
     }
 }

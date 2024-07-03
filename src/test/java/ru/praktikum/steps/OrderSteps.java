@@ -10,6 +10,7 @@ import ru.praktikum.model.User;
 import java.util.Collections;
 import java.util.List;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -18,7 +19,7 @@ public class OrderSteps {
 
     @Step("Получение списка ингредиентов")
     public static List<String> getIngredientIds() {
-        Response response = RestAssured.given()
+        Response response = given()
                 .get(EndPoints.GET_INGREDIENTS);
         response.then()
                 .statusCode(200)
@@ -29,7 +30,7 @@ public class OrderSteps {
 
     @Step("Создание заказа без авторизации")
     public static void createOrderWithoutAuthorization(List<String> ingredients) {
-        Response response = RestAssured.given()
+        Response response = given()
                 .contentType(ContentType.JSON)
                 .body(Collections.singletonMap("ingredients", ingredients))
                 .log().all()
@@ -40,7 +41,19 @@ public class OrderSteps {
                 .body("success", equalTo(true))
                 .body("order.number", notNullValue());
     }
+    @Step("Получение заказов пользователя")
+    public static void getUserOrders(String accessToken) {
+        Response response = given()
+                .header("Authorization", "Bearer " + accessToken)
+                .log().all()
+                .get(EndPoints.GET_ORDERS);
 
+        response.then()
+                .statusCode(200)
+                .log().all()
+                .body("success", equalTo(true))
+                .body("orders", notNullValue());
+    }
 
     @Step("Получение случайных ингредиентов")
     public static List<String> getRandomIngredients(int count) {
@@ -51,7 +64,7 @@ public class OrderSteps {
 
     @Step("Создание заказа с авторизацией")
     public static void createOrderWithAuthorization(List<String> ingredients, String accessToken) {
-        Response response = RestAssured.given()
+        Response response = given()
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(ContentType.JSON)
                 .body(Collections.singletonMap("ingredients", ingredients))
@@ -76,30 +89,16 @@ public class OrderSteps {
                     .body("success", equalTo(true))
                     .body("order.number", notNullValue());
         }
-    }
 
-    @Step("Удаление пользователя с токеном доступа")
-    public static void deleteUserWithAccessToken(String accessToken) {
-        RestAssured.given()
-                .header("Authorization", "Bearer " + accessToken)
-                .log().all()
-                .delete(EndPoints.DELETE_USER)
+    }
+    @Step("Получение заказов пользователя без авторизации")
+    public static Response getUserOrdersWithoutAuthorization() {
+        return given()
+                .when()
+                .get(EndPoints.GET_ORDERS)
                 .then()
-                .statusCode(202)
                 .log().all()
-                .body("success", equalTo(true));
-    }
-
-    @Step("Логин пользователя и получение токена")
-    public static String loginUserAndGetToken(User user) {
-        Response response = RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(user)
-                .post(EndPoints.LOGIN_USER);
-        response.then()
-                .statusCode(200)
-                .log().all()
-                .body("success", equalTo(true));
-        return response.jsonPath().getString("accessToken").substring(7); // Убираем "Bearer " из токена
+                .extract()
+                .response();
     }
 }

@@ -33,17 +33,16 @@ public class CreateOrderTests {
     public void createUserAndLogin() {
         user = UserSteps.generateUniqueUser();
         UserSteps.createUser(user);
-        accessToken = OrderSteps.loginUserAndGetToken(user);
+        accessToken = UserSteps.loginUserAndGetToken(user);
         ingredientIds = OrderSteps.getIngredientIds();
     }
 
     @After
     public void deleteUser() {
         if (accessToken != null) {
-            OrderSteps.deleteUserWithAccessToken(accessToken);
+            UserSteps.deleteUserWithAccessToken(accessToken);
         }
     }
-
     private List<String> getRandomIngredients(int count) {
         Collections.shuffle(ingredientIds);
         return ingredientIds.subList(0, count);
