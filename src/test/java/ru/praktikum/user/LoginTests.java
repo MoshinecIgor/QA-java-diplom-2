@@ -11,8 +11,6 @@ import ru.praktikum.EndPoints;
 import ru.praktikum.model.User;
 import ru.praktikum.steps.UserSteps;
 
-import static org.hamcrest.Matchers.equalTo;
-
 @DisplayName("Тесты логина пользователя")
 public class LoginTests {
     private String accessToken;

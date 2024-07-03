@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class UserSteps {
     public static String accessToken;
-    public static User user;
+
 
     public static User generateUniqueUser() {
         String uniqueEmail = "user" + UUID.randomUUID() + "@example.com";
@@ -78,7 +78,7 @@ public class UserSteps {
 
     @Step("Удаление пользователя с токеном доступа")
     public static void deleteUserWithAccessToken(String accessToken) {
-        sendDeleteRequest(EndPoints.DELETE_USER, accessToken)
+        sendDeleteRequest(accessToken)
                 .then()
                 .statusCode(202)
                 .log().all()
@@ -94,7 +94,7 @@ public class UserSteps {
 
     @Step("Изменение данных пользователя без авторизации")
     public static void changeUserDataWithoutAuthorization(User updatedUser) {
-        sendPatchRequest(updatedUser, EndPoints.UPDATE_USER, null)
+        sendPatchRequest(updatedUser, null)
                 .then()
                 .statusCode(401)
                 .log().all()
@@ -104,7 +104,7 @@ public class UserSteps {
 
     @Step("Изменение данных пользователя с авторизацией")
     public static void changeUserDataWithAuthorization(User updatedUser, String accessToken) {
-        sendPatchRequest(updatedUser, EndPoints.UPDATE_USER, accessToken)
+        sendPatchRequest(updatedUser, accessToken)
                 .then()
                 .statusCode(200)
                 .log().all()
@@ -143,7 +143,7 @@ public class UserSteps {
 
     @Step("Изменение данных пользователя")
     public static Response updateUserData(User updatedUser, String accessToken) {
-        return sendPatchRequest(updatedUser, EndPoints.UPDATE_USER, accessToken);
+        return sendPatchRequest(updatedUser, accessToken);
     }
 
     @Step("Создание пользователя с отсутствующим обязательным полем")
@@ -162,18 +162,18 @@ public class UserSteps {
                 .post(endpoint);
     }
 
-    private static Response sendPatchRequest(Object body, String endpoint, String accessToken) {
+    private static Response sendPatchRequest(Object body, String accessToken) {
         return RestAssured.given()
                 .header("Authorization", accessToken != null ? "Bearer " + accessToken : "")
                 .contentType(ContentType.JSON)
                 .body(body)
-                .patch(endpoint);
+                .patch(EndPoints.UPDATE_USER);
     }
 
-    private static Response sendDeleteRequest(String endpoint, String accessToken) {
+    private static Response sendDeleteRequest(String accessToken) {
         return RestAssured.given()
                 .header("Authorization", "Bearer " + accessToken)
-                .delete(endpoint);
+                .delete(EndPoints.DELETE_USER);
     }
 
     @Step("Извлечение токена из ответа")

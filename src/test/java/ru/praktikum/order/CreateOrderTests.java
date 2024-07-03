@@ -21,7 +21,6 @@ import java.util.List;
 @DisplayName("Тесты создания заказов")
 public class CreateOrderTests {
     private String accessToken;
-    private User user;
     private List<String> ingredientIds;
 
     @BeforeClass
@@ -31,7 +30,7 @@ public class CreateOrderTests {
 
     @Before
     public void createUserAndLogin() {
-        user = UserSteps.generateUniqueUser();
+        User user = UserSteps.generateUniqueUser();
         UserSteps.createUser(user);
         accessToken = UserSteps.loginUserAndGetToken(user);
         ingredientIds = OrderSteps.getIngredientIds();
@@ -43,16 +42,16 @@ public class CreateOrderTests {
             UserSteps.deleteUserWithAccessToken(accessToken);
         }
     }
-    private List<String> getRandomIngredients(int count) {
+    private List<String> getRandomIngredients() {
         Collections.shuffle(ingredientIds);
-        return ingredientIds.subList(0, count);
+        return ingredientIds.subList(0, 2);
     }
 
     @Test
     @Description("Создание заказа с авторизацией")
     @DisplayName("Создание заказа с авторизацией")
     public void createOrderWithAuthorizationTest() {
-        List<String> ingredients = getRandomIngredients(2);
+        List<String> ingredients = getRandomIngredients();
         OrderSteps.createOrderWithAuthorization(ingredients, accessToken);
     }
 
@@ -60,7 +59,7 @@ public class CreateOrderTests {
     @Description("Создание заказа без авторизации")
     @DisplayName("Создание заказа без авторизации")
     public void createOrderWithoutAuthorizationTest() {
-        List<String> ingredients = getRandomIngredients(2);
+        List<String> ingredients = getRandomIngredients();
         OrderSteps.createOrderWithoutAuthorization(ingredients);
     }
 
@@ -69,7 +68,7 @@ public class CreateOrderTests {
     @Description("Создание заказа с ингредиентами")
     @DisplayName("Создание заказа с ингредиентами")
     public void createOrderWithIngredientsTest() {
-        List<String> ingredients = getRandomIngredients(2);
+        List<String> ingredients = getRandomIngredients();
         OrderSteps.createOrderWithAuthorization(ingredients, accessToken);
     }
 

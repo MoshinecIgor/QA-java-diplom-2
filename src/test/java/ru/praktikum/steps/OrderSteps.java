@@ -1,11 +1,9 @@
 package ru.praktikum.steps;
 
 import io.qameta.allure.Step;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import ru.praktikum.EndPoints;
-import ru.praktikum.model.User;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +39,7 @@ public class OrderSteps {
                 .body("success", equalTo(true))
                 .body("order.number", notNullValue());
     }
+
     @Step("Получение заказов пользователя")
     public static void getUserOrders(String accessToken) {
         Response response = given()
@@ -91,6 +90,7 @@ public class OrderSteps {
         }
 
     }
+
     @Step("Получение заказов пользователя без авторизации")
     public static Response getUserOrdersWithoutAuthorization() {
         return given()

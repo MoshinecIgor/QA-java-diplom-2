@@ -1,11 +1,8 @@
 package ru.praktikum.user;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +12,6 @@ import ru.praktikum.model.User;
 import ru.praktikum.steps.UserSteps;
 
 import java.util.Collection;
-
-import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(Parameterized.class)
 @DisplayName("Параметризированые тесты создания пользователя")
